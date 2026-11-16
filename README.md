@@ -1,4 +1,4 @@
-# Virtual Machine vs. Container: the same API, measured side by side
+# SEN421 Cloud project: VM vs. Docker container with a supply chain API
 
 SEN421 Cloud Architecture and Services, Fall 2026. Topic 2 (Part A, local).
 
