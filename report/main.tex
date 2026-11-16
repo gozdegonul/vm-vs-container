@@ -1,0 +1,367 @@
+% SEN421 Fall 2026 -- Topic 2 (Part A): Virtual Machines vs. Containers
+% Built on the official course template (IEEEtran, conference, A4).
+%
+% NOTLAR (teslimden önce bu yorumların hepsini silin):
+%  * [TODO] ile işaretli yerler SİZİN yazmanız gereken yerler: motivasyon, yorum, tartışma,
+%    sonuç. Kılavuz bunların öğrencinin kendi düşüncesi olmasını şart koşuyor.
+%  * Tablo ve grafik, ölçümlerden sonra "node scripts/summarize.js" ile otomatik üretilir
+%    (report/generated/). Ölçüm yapmadan derlerseniz yerlerinde uyarı kutusu görünür.
+%  * Her kaynağı kendiniz açıp okuyun ve doğrulayın; okumadığınız kaynağı bırakmayın.
+
+\documentclass[conference,a4paper]{IEEEtran}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.17}
+
+\lstset{
+	basicstyle=\ttfamily\footnotesize,
+	keywordstyle=\color{blue}\bfseries,
+	commentstyle=\color{gray}\itshape,
+	stringstyle=\color{red},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	numbersep=5pt,
+	frame=single,
+	breaklines=true,
+	captionpos=b,
+	tabsize=4
+}
+
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\begin{document}
+
+\title{Virtual Machine or Container? Measuring Startup Time, Footprint, and Throughput of a Supply Chain API\\
+	{\footnotesize SEN421 --- Cloud Architecture and Services, Course Project, Fall 2026\\
+		Istanbul Ayd\i n University}
+}
+
+\author{\IEEEauthorblockN{[Student Full Name]}
+	\IEEEauthorblockA{\textit{Department of Computer Engineering}\\
+		\textit{Istanbul Ayd\i n University}\\
+		Istanbul, Turkey \\
+		Student ID: [XXXXXXXXX] \\
+		student@stu.aydin.edu.tr}
+}
+
+\maketitle
+
+\begin{abstract}
+% [TODO] 150--250 kelime. Sonuçlar çıktıktan sonra SİZ yazın: soru, Topic 2 Part A,
+% ne kurdunuz, iki alternatif, ana sayılar (başlatma süresi, disk, bellek, istek/s),
+% maliyet (0 USD yerel + bulut tahmini) ve ana sonuç. Sembol/matematik kullanmayın.
+\todo{Abstract, written after the results are known.}
+\end{abstract}
+
+\begin{IEEEkeywords}
+cloud computing, virtualization, containers, Docker, performance evaluation
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:introduction}
+% [TODO] Kendi cümlelerinizle: Neden önemli? (ör. otomatik ölçeklendirmede yeni kopyanın
+% ne kadar sürede hazır olduğu kullanıcıların ne kadar süre yavaş cevap gördüğünü belirler.)
+\todo{Problem and motivation in your own words.}
+
+This study asks the following question: \emph{for the same small web API, how large is the
+difference between a virtual machine and a container in startup time, disk and memory
+footprint, and requests handled per second, and what does this difference mean for
+autoscaling?} The same application is deployed both ways on one host with identical CPU and
+memory limits, and each measurement is repeated three times.
+\todo{One paragraph on the structure of the paper (Section~\ref{sec:related_work} \ldots).}
+
+\section{Background and Related Work}
+\label{sec:related_work}
+% [TODO] Part A: en az 4--6 kaynak. Aşağıdaki kaynakları okuyup KENDİ sentezinizi yazın.
+% Anlatılacak kavramlar: hypervisor (Type 1 / Type 2), tam sanallaştırma, konteyner =
+% paylaşılan çekirdek + namespaces + cgroups, imaj katmanları.
+% Önerilen bağlantı: Felter ve ark. ve Morabito ve ark. sunucu donanımında ölçmüş;
+% bu çalışma bir dizüstü bilgisayarda, Windows üzerinde (Docker'ın kendisi de WSL 2 VM
+% içinde çalışırken) ölçüyor --- fark bu.
+\todo{Concepts: hypervisors and the shared kernel~\cite{b1,b4,b5}. Prior comparisons~\cite{b6,b7} and how this work differs.}
+
+\section{System Design}
+\label{sec:design}
+
+\subsection{Architecture}
+% Kılavuz diyagramı SİZİN çizmenizi istiyor (draw.io). Önerilen içerik:
+% Sol: Windows 11 host -> Hyper-V / Windows Hypervisor Platform
+%   -> (a) VirtualBox -> Ubuntu 24.04 guest kernel -> systemd -> Node.js API :8080
+%          (NAT port forward host 127.0.0.1:8081 -> guest 8080)
+%   -> (b) WSL 2 VM (Docker Desktop) -> Linux kernel -> container (node:22-alpine) -> API :8080
+% Sağ: k6 yük üreticisi (host) -> HTTP istekleri her iki uca.
+% PNG olarak report/architecture.png kaydedin.
+\begin{figure}[htbp]
+	\centering
+	\IfFileExists{architecture.png}{\includegraphics[width=\columnwidth]{architecture.png}}
+	{\fbox{\parbox{0.9\columnwidth}{\centering\vspace{1.2cm}Draw the architecture diagram and save it as architecture.png\vspace{1.2cm}}}}
+	\caption{Test architecture. The same API runs in a VirtualBox virtual machine (left) and in a Docker container (right); k6 on the host sends the load.}
+	\label{fig:architecture}
+\end{figure}
+
+\subsection{Application}
+The workload is a supply chain back end written for this study as a single Node.js file
+without external libraries. At startup it generates a fixed synthetic data set from a seed:
+20 warehouses in Turkish cities linked by a road network, 50 suppliers, 500 products with
+90 days of demand history, and 5,000 inventory rows. Its 22 REST endpoints cover catalogue
+and stock queries, customer orders with all-or-nothing stock reservation and a
+CONFIRMED--PICKED--SHIPPED--DELIVERED life cycle, purchase orders, delivery route planning
+with Dijkstra's shortest-path algorithm, demand forecasting with Holt's linear exponential
+smoothing, replenishment planning (safety stock, reorder point and economic order
+quantity), and ABC analysis. The mix therefore contains light read requests, writes that
+change shared state, and CPU-heavy calculations.
+% [TODO] Neden böyle bir uygulama seçtiğinizi kendi cümlelerinizle ekleyin
+% (ör. gerçekçi bir iş yükü, ama sonuçların platform farkını göstermesi için basit tutuldu).
+
+\subsection{Alternatives Compared}
+The two alternatives are (1) a full virtual machine: VirtualBox running Ubuntu Server 26.04
+LTS with the API as a systemd service, and (2) a container: the \texttt{node:22-alpine} image
+run with Docker Desktop. Both run Node.js 22 and the identical file \texttt{server.js}, which
+has no external dependencies. Both are limited to 2 vCPU and 2\,GB of memory
+(\texttt{VBoxManage modifyvm --cpus 2 --memory 2048} and
+\texttt{docker run --cpus 2 --memory 2g}). Local tools were chosen because they are free and
+make the experiment repeatable without a cloud account; the same two options exist in every
+public cloud as virtual machine instances and container services.
+
+\subsection{Requirements and Responsibilities}
+% [TODO] Gereksinimler (ör. yeni kopya X saniye içinde hazır olmalı, p95 < Y ms) ve her
+% alternatif için kimin neyi yönettiği. Bulutta karşılığı: VM'de işletim sistemi yamaları,
+% SSH, güvenlik duvarı sizde; konteyner servisinde host OS sağlayıcıda, imaj içeriği sizde.
+\todo{Requirements and a short responsibility comparison (could be a small table).}
+
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Environment}
+% Tüm "[...]" değerlerini kendi sürümlerinizle doldurun.
+\begin{table}[htbp]
+	\caption{Experimental Environment}
+	\label{tab:environment}
+	\centering
+	\footnotesize
+	\begin{tabular}{|l|p{0.58\columnwidth}|}
+		\hline
+		\textbf{Property} & \textbf{Value} \\
+		\hline
+		Host & Intel Core i5-12450H, 16\,GB RAM, Windows 11 Home [build] \\
+		\hline
+		VM platform & VirtualBox 7.2.22, Ubuntu Server 26.04.1 LTS, 20\,GB VDI \\
+		\hline
+		Container platform & Docker Desktop, Docker Engine 29.9.3 (WSL 2 backend), image \texttt{node:22-alpine} \\
+		\hline
+		Limits (both) & 2 vCPU, 2\,GB memory \\
+		\hline
+		Application & Supply chain REST API, Node.js 22, 22 endpoints, no external libraries, synthetic data \\
+		\hline
+		Load test tool & k6 [v1.x], 50 virtual users, no think time \\
+		\hline
+		Test duration & 2 minutes per run, 60\,s cooldown \\
+		\hline
+		Repetitions & 3 per alternative \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Measurements}
+All measurements are taken by one script, \texttt{measure.ps1}, so both alternatives are
+treated in exactly the same way. Only one alternative runs at a time.
+\begin{itemize}
+	\item \textbf{Disk footprint (MB):} the image size reported by \texttt{docker image inspect},
+	and the size of the VM's virtual disk file.
+	\item \textbf{Cold start time (ms):} from the start command (\texttt{docker run} or
+	\texttt{VBoxManage startvm --type headless}) until \texttt{/health} returns HTTP 200,
+	polled every 50\,ms. For the VM this includes the operating system boot.
+	\item \textbf{Warm start time (ms):} restarting an existing stopped container, and for the
+	VM, resuming from a saved state.
+	\item \textbf{Stop time (ms):} \texttt{docker stop}, and an ACPI shutdown of the VM until
+	it is powered off.
+	\item \textbf{Memory (MB):} after 30\,s idle and in the middle of the load test. For the VM,
+	the working set of the \texttt{VirtualBoxVM} process on the host; for the container, the
+	memory reported by \texttt{docker stats}. The memory of Docker Desktop's own WSL 2 virtual
+	machine is recorded separately. The API also reports the memory of its own Node.js
+	process, which separates the application from the platform overhead.
+	\item \textbf{Response time and throughput:} k6 with 50 virtual users for 2 minutes and no
+	think time. Each iteration is one user session: list products, check the stock of a
+	product, open a warehouse inventory page, place an order, request a 14-day demand
+	forecast, and plan a route; about one in ten iterations also requests replenishment
+	planning. Reported: median and 95th-percentile response time (ms), requests per second,
+	and the share of failed requests (a 409 ``insufficient stock'' answer counts as valid).
+\end{itemize}
+Each value is reported as the mean and the sample standard deviation of three runs.
+
+\subsection{Reproducibility and Verification}
+All code, the Dockerfile, the VM set-up script, the k6 script and the raw results are in the
+repository listed in Appendix~\ref{app:code}, with step-by-step instructions in its README.
+\texttt{summarize.js} turns the raw results into Table~\ref{tab:results} and
+Fig.~\ref{fig:start}.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Performance Results}
+\IfFileExists{generated/results_table.tex}{\input{generated/results_table.tex}}
+{\begin{table}[htbp]\caption{Measured Results}\label{tab:results}\centering
+\fbox{Run the measurements and summarize.js first.}\end{table}}
+
+\begin{figure}[htbp]
+	\centering
+	\IfFileExists{generated/chart_start.dat}{
+	\begin{tikzpicture}
+		\begin{axis}[
+			ybar, bar width=12pt, width=\columnwidth, height=5cm,
+			ymode=log, log origin=infty,
+			symbolic x coords={cold,warm}, xtick=data,
+			xticklabels={Cold start, Warm start / resume},
+			ylabel={Time until first response (s)},
+			legend style={at={(0.5,1.02)}, anchor=south, legend columns=2, draw=none},
+			enlarge x limits=0.5,
+			nodes near coords, every node near coord/.append style={font=\tiny},
+			]
+			\addplot+[error bars/.cd, y dir=both, y explicit]
+			table[x=phase, y=vm, y error=vmsd] {generated/chart_start.dat};
+			\addplot+[error bars/.cd, y dir=both, y explicit]
+			table[x=phase, y=docker, y error=dockersd] {generated/chart_start.dat};
+			\legend{Virtual machine, Container}
+		\end{axis}
+	\end{tikzpicture}}
+	{\fbox{\parbox{0.9\columnwidth}{\centering\vspace{1cm}Chart appears after summarize.js\vspace{1cm}}}}
+	\caption{Time from the start command until the API answers (mean of three runs, logarithmic scale; error bars show the standard deviation).}
+	\label{fig:start}
+\end{figure}
+
+% [TODO] Tabloyu ve grafiği SİZ yorumlayın: kaç kat fark var, hangi ölçümde fark küçük
+% (muhtemelen istek/s ve gecikme), standart sapma büyük mü?
+\todo{Describe the numbers in Table~\ref{tab:results} and Fig.~\ref{fig:start}.}
+
+\subsection{Cost Results}
+The experiments ran on the author's own computer with free software, so the actual cost was
+0~USD and no cloud resources had to be deleted. The VM and the container were removed after
+the measurements (README, step~5).
+% [TODO] Bulutta karşılığı için tahmin: aynı iş yükü (2 vCPU, 2 GB) bir VM örneğinde ve bir
+% konteyner servisinde (ör. AWS EC2 vs. ECS Fargate, ya da Azure VM vs. Container Apps) aylık
+% ne tutar? Fiyatları resmi fiyat hesaplayıcıdan alın, bölge + ERİŞİM TARİHİ yazın.
+% Ölçtüğünüz başlatma süresini maliyete bağlayın: konteyner hızlı başladığı için
+% "ihtiyaç olunca aç" mümkün mü?
+\begin{table}[htbp]
+	\caption{Estimated Monthly Cloud Cost for 2 vCPU / 2\,GB, 730 Hours}
+	\label{tab:cost}
+	\centering
+	\footnotesize
+	\begin{tabular}{|l|c|c|}
+		\hline
+		\textbf{Cost item} & \textbf{Virtual machine} & \textbf{Container service} \\
+		\hline
+		Compute & \ldots & \ldots \\
+		\hline
+		Storage & \ldots & \ldots \\
+		\hline
+		Data transfer out & \ldots & \ldots \\
+		\hline
+		\textbf{Total (USD)} & \ldots & \ldots \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Comparison of Alternatives}
+\todo{Which one is better on which criterion, and the trade-off.}
+
+\section{Discussion}
+\label{sec:discussion}
+% [TODO] Bu bölüm tamamen SİZİN yorumunuz olmalı. Ele alınacaklar:
+%  - Farkı hypervisor ve paylaşılan çekirdek ile açıklayın (VM tam bir OS açıyor).
+%  - Otomatik ölçeklendirme: soğuk başlatma süresi = kullanıcıların yavaş cevap gördüğü süre.
+%  - Güvenlik / izolasyon: VM ayrı çekirdek, konteyner ortak çekirdek. Konteyneri root
+%    olmayan kullanıcıyla çalıştırdık (Dockerfile'da USER node).
+%  - Shared responsibility: bulutta VM'de OS yaması sizde; konteyner servisinde değil.
+%  - Kısıtlar: tek dizüstü, Windows'ta Hyper-V aktifken VirtualBox WHP üzerinde çalışıyor
+%    (VM aleyhine olabilir), Docker da aslında WSL 2 VM içinde, 3 tekrar, 2 dk test,
+%    k6 aynı makinede çalışıyor (CPU paylaşımı), termal kısıtlama.
+%  - Şaşırtıcı bulgu var mı?
+\todo{Your own critical discussion.}
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+% [TODO] 1--2 cümlede ana sayılar, öneri, daha fazla zaman olsa ne yapardınız
+% (ör. aynı testi gerçek bulutta, Linux host'ta, KVM ile, otomatik ölçeklendirme grubunda).
+\todo{Conclusion.}
+
+\section*{AI Tool Use and Originality Declaration}
+\label{sec:ai_declaration}
+% [TODO] Doğru doldurun. Yapay zekâ ile neyi yaptıysanız onu yazın (ör. betikler ve LaTeX
+% iskeleti bir AI aracıyla hazırlandı, siz inceleyip test ettiniz). Yorum ve tartışmayı
+% kendiniz yazdıysanız o satırlar düşük seviye olur.
+AI-assisted tools were used for limited support as described in Table~\ref{tab:ai_use}. The
+project question, the experiments, the analysis, the interpretation of the results and the
+final wording were reviewed, verified and finalized by the student, who accepts full
+responsibility for the accuracy, originality, reproducibility and integrity of the work.
+
+\begin{table}[htbp]
+	\caption{AI Use Disclosure Summary}
+	\label{tab:ai_use}
+	\centering
+	\footnotesize
+	\begin{tabular}{|p{0.35\linewidth}|c|p{0.38\linewidth}|}
+		\hline
+		\textbf{Project Stage} & \textbf{Level} & \textbf{Brief Description} \\
+		\hline
+		Topic and question & [0--6] & \\
+		\hline
+		Literature and documentation search & [0--6] & \\
+		\hline
+		Design, deployment, and configuration & [0--6] & \\
+		\hline
+		Measurement, cost analysis, and modeling & [0--6] & \\
+		\hline
+		Writing, editing, and LaTeX formatting & [0--6] & \\
+		\hline
+		Interpretation, discussion, and conclusion & [0--6] & \\
+		\hline
+	\end{tabular}
+\end{table}
+
+% Kaynaklar: hepsini açıp okuyun ve bilgileri (sayfa, yıl, URL) kendiniz doğrulayın.
+% Web sayfaları için erişim tarihini kendi okuduğunuz gün olarak yazın.
+\begin{thebibliography}{00}
+
+\bibitem{b1} P.~Mell and T.~Grance, ``The NIST definition of cloud computing,'' National Institute of Standards and Technology, Gaithersburg, MD, USA, NIST Special Publication 800-145, 2011.
+
+\bibitem{b2} J.~West, \textit{CompTIA Cloud+ Guide to Cloud Computing}, 2nd~ed. Boston, MA, USA: Cengage, 2024.
+
+\bibitem{b3} Docker Inc., ``Resource constraints,'' Docker Docs. [Online]. Available: https://docs.docker.com/engine/containers/resource\_constraints/. [Accessed: Day Month 2026].
+
+\bibitem{b4} Oracle, ``Oracle VirtualBox User Guide,'' [Online]. Available: https://www.virtualbox.org/manual/. [Accessed: Day Month 2026].
+
+\bibitem{b5} D.~Merkel, ``Docker: Lightweight Linux containers for consistent development and deployment,'' \textit{Linux Journal}, vol.~2014, no.~239, 2014.
+
+\bibitem{b6} W.~Felter, A.~Ferreira, R.~Rajamony, and J.~Rubio, ``An updated performance comparison of virtual machines and Linux containers,'' in \textit{Proc. IEEE Int. Symp. Performance Analysis of Systems and Software (ISPASS)}, 2015, pp.~171--172.
+
+\bibitem{b7} R.~Morabito, J.~Kj\"allman, and M.~Komu, ``Hypervisors vs. lightweight virtualization: A performance comparison,'' in \textit{Proc. IEEE Int. Conf. Cloud Engineering (IC2E)}, 2015, pp.~386--393.
+
+\bibitem{b8} Grafana Labs, ``Grafana k6 documentation,'' [Online]. Available: https://grafana.com/docs/k6/latest/. [Accessed: Day Month 2026].
+
+\end{thebibliography}
+
+\appendix
+
+\section{Code Repository}
+\label{app:code}
+Scripts and configuration files are available at: \url{https://github.com/yourusername/vm-vs-container}
+
+\begin{lstlisting}[language=bash, caption={Starting the container with the same limits as the VM}, label={lst:run}]
+docker build -t sen421-api:1.0 app
+docker run -d --name sen421-api --cpus 2 --memory 2g \
+  -p 127.0.0.1:8080:8080 sen421-api:1.0
+\end{lstlisting}
+
+\end{document}

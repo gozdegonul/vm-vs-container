@@ -1,0 +1,25 @@
+node_modules/
+
+# Large VM / installer files never belong in the repository
+*.iso
+*.vdi
+*.vbox
+*.vbox-prev
+
+# LaTeX build files
+report/*.aux
+report/*.log
+report/*.out
+report/*.synctex.gz
+report/*.fls
+report/*.fdb_latexmk
+
+# Secrets and local settings
+.env
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

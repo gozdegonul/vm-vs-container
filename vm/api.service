@@ -1,0 +1,14 @@
+[Unit]
+Description=SEN421 test API (Node.js)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=apiuser
+Environment=PORT=8080
+WorkingDirectory=/opt/api
+ExecStart=/usr/bin/node /opt/api/server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
