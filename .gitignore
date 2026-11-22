@@ -23,3 +23,6 @@ report/*.fdb_latexmk
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Compiled report (shared separately when submitting)
+report/main.pdf

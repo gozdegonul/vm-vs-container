@@ -18,6 +18,7 @@
 \usepackage{array}
 \usepackage{listings}
 \usepackage{url}
+\usepackage{xurl} % lets long URLs (e.g. the pricing calculator link) break at any character
 \usepackage{hyperref}
 \usepackage{cite}
 \usepackage{pgfplots}
@@ -275,6 +276,7 @@ day (365 hours).
 	\label{tab:cost}
 	\centering
 	\footnotesize
+	\resizebox{\columnwidth}{!}{%
 	\begin{tabular}{|l|c|c|}
 		\hline
 		\textbf{Cost item} & \textbf{EC2 t3.medium} & \textbf{Fargate 2 vCPU / 4\,GB} \\
@@ -289,7 +291,7 @@ day (365 hours).
 		\hline
 		\textbf{Total, 365 h (12 h/day)} & \textbf{19.42} & \textbf{41.45} \\
 		\hline
-	\end{tabular}
+	\end{tabular}}
 \end{table}
 
 \subsection{Comparison of Alternatives}
@@ -357,9 +359,9 @@ responsibility for the accuracy, originality, reproducibility and integrity of t
 
 \bibitem{b2} J.~West, \textit{CompTIA Cloud+ Guide to Cloud Computing}, 2nd~ed. Boston, MA, USA: Cengage, 2024.
 
-\bibitem{b3} Docker Inc., ``Resource constraints,'' Docker Docs. [Online]. Available: https://docs.docker.com/engine/containers/resource\_constraints/. [Accessed: Day Month 2026].
+\bibitem{b3} Docker Inc., ``Resource constraints,'' Docker Docs. [Online]. Available: \url{https://docs.docker.com/engine/containers/resource_constraints/}. [Accessed: Day Month 2026].
 
-\bibitem{b4} Oracle, ``Oracle VirtualBox User Guide,'' [Online]. Available: https://www.virtualbox.org/manual/. [Accessed: Day Month 2026].
+\bibitem{b4} Oracle, ``Oracle VirtualBox User Guide,'' [Online]. Available: \url{https://www.virtualbox.org/manual/}. [Accessed: Day Month 2026].
 
 \bibitem{b5} D.~Merkel, ``Docker: Lightweight Linux containers for consistent development and deployment,'' \textit{Linux Journal}, vol.~2014, no.~239, 2014.
 
@@ -367,7 +369,7 @@ responsibility for the accuracy, originality, reproducibility and integrity of t
 
 \bibitem{b7} R.~Morabito, J.~Kj\"allman, and M.~Komu, ``Hypervisors vs. lightweight virtualization: A performance comparison,'' in \textit{Proc. IEEE Int. Conf. Cloud Engineering (IC2E)}, 2015, pp.~386--393.
 
-\bibitem{b8} Grafana Labs, ``Grafana k6 documentation,'' [Online]. Available: https://grafana.com/docs/k6/latest/. [Accessed: Day Month 2026].
+\bibitem{b8} Grafana Labs, ``Grafana k6 documentation,'' [Online]. Available: \url{https://grafana.com/docs/k6/latest/}. [Accessed: Day Month 2026].
 
 \bibitem{b9} Amazon Web Services, ``AWS Pricing Calculator: Amazon EC2 t3.medium and AWS Fargate, Europe (Frankfurt),'' [Online]. Available: \url{https://calculator.aws/\#/estimate?id=13cc304f30da2ccb0644f7ffe4d29740e200dc2f}. [Accessed: 23 November 2026].
 
