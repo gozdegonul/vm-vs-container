@@ -249,29 +249,44 @@ Fig.~\ref{fig:start}.
 
 \subsection{Cost Results}
 The experiments ran on the author's own computer with free software, so the actual cost was
-0~USD and no cloud resources had to be deleted. The VM and the container were removed after
-the measurements (README, step~5).
-% [TODO] Bulutta karşılığı için tahmin: aynı iş yükü (2 vCPU, 2 GB) bir VM örneğinde ve bir
-% konteyner servisinde (ör. AWS EC2 vs. ECS Fargate, ya da Azure VM vs. Container Apps) aylık
-% ne tutar? Fiyatları resmi fiyat hesaplayıcıdan alın, bölge + ERİŞİM TARİHİ yazın.
-% Ölçtüğünüz başlatma süresini maliyete bağlayın: konteyner hızlı başladığı için
-% "ihtiyaç olunca aç" mümkün mü?
+0~USD and no cloud resources were created. The VM and the container image are kept until the
+project has been assessed, so that measurements can be repeated, and are then deleted
+(README, step~5).
+
+To estimate what the two alternatives would cost in a public cloud, both were priced with the
+AWS Pricing Calculator~\cite{b9} in the Europe (Frankfurt) region, the large AWS region
+closest to Turkey, with On-Demand prices (accessed 23 November 2026). The virtual machine is an
+Amazon EC2 \texttt{t3.medium} instance (2 vCPU, 4\,GiB, 0.048~USD per hour) with a 20\,GB gp3
+disk; the container is one AWS Fargate task with 2 vCPU and 4\,GB, which includes 20\,GB of
+ephemeral storage. Fargate does not offer 2\,GB of memory with 2 vCPU, so both alternatives were
+priced at 4\,GB instead of the 2\,GB used in the experiment; the application needed less than
+110\,MB (Table~\ref{tab:results}). Data transfer out is taken as zero: at the average response
+size measured in the load tests (about 1.3\,KB), 10~million requests per month produce about
+13\,GB, which is inside the 100\,GB per month that AWS does not charge for. Table~\ref{tab:cost}
+shows the result for an instance running all month (730 hours) and for one running 12 hours a
+day (365 hours).
+% [TODO] Maliyet sonuçlarını kendi sözlerinizle yorumlayın: Fargate sürekli açıkken ~2,2 kat
+% pahalı; ama işletim sistemi bakımı sağlayıcıda. Ölçtüğünüz başlatma süresini maliyete bağlayın:
+% konteyner yarım saniyede açıldığı için ihtiyaç olmadığında kapatılabilir, VM ~70 s sürüyor.
+% Varsayım: t3 "burstable" bir tip; sürekli yüksek CPU'da ek CPU kredisi ücreti çıkabilir.
 \begin{table}[htbp]
-	\caption{Estimated Monthly Cloud Cost for 2 vCPU / 2\,GB, 730 Hours}
+	\caption{Estimated Monthly Cloud Cost, AWS Frankfurt, On-Demand (USD)}
 	\label{tab:cost}
 	\centering
 	\footnotesize
 	\begin{tabular}{|l|c|c|}
 		\hline
-		\textbf{Cost item} & \textbf{Virtual machine} & \textbf{Container service} \\
+		\textbf{Cost item} & \textbf{EC2 t3.medium} & \textbf{Fargate 2 vCPU / 4\,GB} \\
 		\hline
-		Compute & \ldots & \ldots \\
+		Compute, 730 h & 35.04 & 82.90 \\
 		\hline
-		Storage & \ldots & \ldots \\
+		Storage, 20\,GB & 1.90 & 0.00 (included) \\
 		\hline
-		Data transfer out & \ldots & \ldots \\
+		Data transfer out & 0.00 & 0.00 \\
 		\hline
-		\textbf{Total (USD)} & \ldots & \ldots \\
+		\textbf{Total, 730 h (24 h/day)} & \textbf{36.94} & \textbf{82.90} \\
+		\hline
+		\textbf{Total, 365 h (12 h/day)} & \textbf{19.42} & \textbf{41.45} \\
 		\hline
 	\end{tabular}
 \end{table}
@@ -352,6 +367,9 @@ responsibility for the accuracy, originality, reproducibility and integrity of t
 \bibitem{b7} R.~Morabito, J.~Kj\"allman, and M.~Komu, ``Hypervisors vs. lightweight virtualization: A performance comparison,'' in \textit{Proc. IEEE Int. Conf. Cloud Engineering (IC2E)}, 2015, pp.~386--393.
 
 \bibitem{b8} Grafana Labs, ``Grafana k6 documentation,'' [Online]. Available: https://grafana.com/docs/k6/latest/. [Accessed: Day Month 2026].
+
+% [TODO] "Share" ile aldığınız tahmin linkini aşağıdaki URL'nin yerine koyun.
+\bibitem{b9} Amazon Web Services, ``AWS Pricing Calculator: Amazon EC2 t3.medium and AWS Fargate, Europe (Frankfurt),'' [Online]. Available: https://calculator.aws/. [Accessed: 23 November 2026].
 
 \end{thebibliography}
 
