@@ -46,7 +46,8 @@ const fmt = (x) => (Math.abs(x) >= 100 ? x.toFixed(0) : x.toFixed(1));
 const cell = (t, k) => {
   const a = values[t]?.[k];
   if (!a || !a.length) return '--';
-  return a.length > 1 ? `${fmt(mean(a))} ± ${fmt(sd(a))}` : fmt(a[0]);
+  const f = k === 'error_rate' ? (x) => x.toFixed(2) : fmt; // small percentages need 2 decimals
+  return a.length > 1 ? `${f(mean(a))} ± ${f(sd(a))}` : f(a[0]);
 };
 
 const order = [

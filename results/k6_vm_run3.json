@@ -1,0 +1,178 @@
+{
+    "metrics": {
+        "http_req_duration{expected_response:true}": {
+            "min": 11.4742,
+            "med": 229.2305,
+            "max": 5765.7035,
+            "p(90)": 301.09749999999997,
+            "p(95)": 312.991525,
+            "p(99)": 338.1319240000001,
+            "avg": 209.3554614795762
+        },
+        "http_req_receiving": {
+            "max": 2.6689,
+            "p(90)": 0.7921,
+            "p(95)": 0.8956,
+            "p(99)": 1.038359,
+            "avg": 0.22877388838633436,
+            "min": 0,
+            "med": 0
+        },
+        "data_sent": {
+            "count": 3871060,
+            "rate": 32056.983597554503
+        },
+        "iteration_duration": {
+            "p(90)": 1723.33699,
+            "p(95)": 1820.5721649999998,
+            "p(99)": 2093.0849399999984,
+            "avg": 1274.9873490470127,
+            "min": 174.905,
+            "med": 1432.6039500000002,
+            "max": 6959.8391
+        },
+        "http_req_sending": {
+            "p(99)": 0,
+            "avg": 0.005633327534618325,
+            "min": 0,
+            "med": 0,
+            "max": 1.7665,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "iterations": {
+            "count": 4722,
+            "rate": 39.10377946806621
+        },
+        "checks": {
+            "passes": 28738,
+            "fails": 4,
+            "value": 0.9998608308398859
+        },
+        "data_received": {
+            "count": 38120198,
+            "rate": 315680.6048011475
+        },
+        "vus": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_connecting": {
+            "min": 0,
+            "med": 0,
+            "max": 4.9108,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0.0032499269361909414
+        },
+        "http_req_blocked": {
+            "min": 0,
+            "med": 0,
+            "max": 4.9108,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0.0047097592373530036
+        },
+        "vus_max": {
+            "value": 50,
+            "min": 50,
+            "max": 50
+        },
+        "http_req_duration": {
+            "avg": 209.3263256558368,
+            "min": 0,
+            "med": 229.2086,
+            "max": 5765.7035,
+            "p(90)": 301.08781,
+            "p(95)": 312.98889499999996,
+            "p(99)": 338.128932
+        },
+        "http_req_waiting": {
+            "p(99)": 337.846492,
+            "avg": 209.09191843991593,
+            "min": 0,
+            "med": 228.96015,
+            "max": 5765.7035,
+            "p(90)": 300.93982,
+            "p(95)": 312.7540299999999
+        },
+        "http_reqs": {
+            "count": 28742,
+            "rate": 238.01796473340934
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0
+        },
+        "http_req_failed": {
+            "passes": 4,
+            "fails": 28738,
+            "value": 0.0001391691601141187
+        }
+    },
+    "root_group": {
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+            "products_list ok": {
+                "name": "products_list ok",
+                "path": "::products_list ok",
+                "id": "842c609dcc7b76996dbd64524dbaa82d",
+                "passes": 4718,
+                "fails": 4
+            },
+            "product_stock ok": {
+                "passes": 4722,
+                "fails": 0,
+                "name": "product_stock ok",
+                "path": "::product_stock ok",
+                "id": "da61fb44920b56988848266c666e396e"
+            },
+            "inventory ok": {
+                "passes": 4722,
+                "fails": 0,
+                "name": "inventory ok",
+                "path": "::inventory ok",
+                "id": "b7a82c5f1de2d3886e05ea3fc94d738c"
+            },
+            "create_order 201 or 409": {
+                "passes": 4722,
+                "fails": 0,
+                "name": "create_order 201 or 409",
+                "path": "::create_order 201 or 409",
+                "id": "9f815889e8964be620b02c456f3e58a6"
+            },
+            "forecast ok": {
+                "name": "forecast ok",
+                "path": "::forecast ok",
+                "id": "1b9126a8340157853d279b90c0546f85",
+                "passes": 4722,
+                "fails": 0
+            },
+            "route ok": {
+                "id": "b1d2aa90ce887289bf5e1677c131424a",
+                "passes": 4722,
+                "fails": 0,
+                "name": "route ok",
+                "path": "::route ok"
+            },
+            "replenishment ok": {
+                "name": "replenishment ok",
+                "path": "::replenishment ok",
+                "id": "7db16a05b6f440c7c4501f0a8a59bbc9",
+                "passes": 410,
+                "fails": 0
+            }
+        },
+        "name": "",
+        "path": ""
+    }
+}

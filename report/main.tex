@@ -199,6 +199,12 @@ treated in exactly the same way. Only one alternative runs at a time.
 	and the share of failed requests (a 409 ``insufficient stock'' answer counts as valid).
 \end{itemize}
 Each value is reported as the mean and the sample standard deviation of three runs.
+Before the final VM runs, Ubuntu's automatic update services (\texttt{unattended-upgrades}
+and the \texttt{apt-daily} timers) were disabled, because in a first attempt they used CPU
+in the background and delayed the shutdown of the VM. When the VM's NAT port forwarding
+stopped passing traffic after a load test, the VM was restarted and the affected
+measurement was repeated (see \texttt{results/NOTES.md} in the repository).
+% [TODO] Bu iki cümleyi kendi üslubunuzla yeniden yazabilirsiniz.
 
 \subsection{Reproducibility and Verification}
 All code, the Dockerfile, the VM set-up script, the k6 script and the raw results are in the

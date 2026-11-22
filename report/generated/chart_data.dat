@@ -1,0 +1,8 @@
+metric vm_mean vm_sd docker_mean docker_sd
+start_time 70736.257 5080.573 551.861 285.114
+resume_time 15386.874 1458.567 319.907 26.501
+platform_mem_idle 843.658 16.858 12.437 0.895
+latency_median 176.116 87.945 21.251 0.568
+latency_p95 252.999 103.573 39.557 1.308
+throughput 367.608 222.985 2174.027 66.033
+disk_size 6138.000 0.000 228.081 0.000

@@ -1,0 +1,15 @@
+== vm run 3 of 3 (resume only)
+powershell : 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+At line:1 char:590
++ ... Number)" }; powershell -NoProfile -ExecutionPolicy Bypass -File scrip ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (0%...10%...20%....0%...90%...100%:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Timed out waiting for http://127.0.0.1:8081/health
+At <project>\scripts\measure.ps1:83 char:5
++     throw "Timed out waiting for $baseUrl/health"
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Timed out waiti...0.1:8081/health:String) [], RuntimeException
+    + FullyQualifiedErrorId : Timed out waiting for http://127.0.0.1:8081/health
+ 

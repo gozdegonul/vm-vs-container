@@ -15,7 +15,11 @@ param(
     [int]$Vus = 50,
     [string]$Duration = "2m",
     [int]$CooldownSec = 60,
-    [switch]$SkipLoad
+    [switch]$SkipLoad,
+    # Continue an interrupted series: e.g. -FirstRun 3 -Runs 3 runs only run 3.
+    [int]$FirstRun = 1,
+    # Only repeat the warm start / resume measurement for the selected runs.
+    [switch]$ResumeOnly
 )
 $ErrorActionPreference = "Stop"
 
@@ -26,8 +30,13 @@ $csv = Join-Path $resultsDir "measurements.csv"
 if (-not (Test-Path $csv)) { "timestamp,target,run,metric,value,unit" | Out-File -Encoding ascii $csv }
 
 $vbox = Join-Path $env:ProgramFiles "Oracle\VirtualBox\VBoxManage.exe"
-$dockerBin = Join-Path $env:ProgramFiles "Docker\Docker\resources\bin"
-if (-not (Get-Command docker -ErrorAction SilentlyContinue) -and (Test-Path $dockerBin)) { $env:Path = "$dockerBin;$env:Path" }
+# Docker Desktop can be installed for all users (Program Files) or per user (LocalAppData).
+if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+    foreach ($dockerBin in @((Join-Path $env:ProgramFiles "Docker\Docker\resources\bin"),
+                             (Join-Path $env:LOCALAPPDATA "Programs\DockerDesktop\resources\bin"))) {
+        if (Test-Path $dockerBin) { $env:Path = "$dockerBin;$env:Path"; break }
+    }
+}
 
 # Runs a native command and ignores its output and stderr (PowerShell 5.1 would otherwise
 # turn stderr text into a terminating error while $ErrorActionPreference is "Stop").
@@ -47,12 +56,22 @@ function Record($run, $metric, $value, $unit) {
     Write-Host ("  {0,-22} {1,10} {2}" -f $metric, $v, $unit)
 }
 
-function Get-Health {
+function Get-Health([int]$timeoutSec = 1) {
     try {
-        $r = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 "$baseUrl/health"
+        $r = Invoke-WebRequest -UseBasicParsing -TimeoutSec $timeoutSec "$baseUrl/health"
         if ($r.StatusCode -eq 200) { return ($r.Content | ConvertFrom-Json) }
     } catch { }
     return $null
+}
+
+# For memory readings: a freshly booted VM can be busy for a moment, so retry patiently.
+function Get-HealthPatient {
+    for ($i = 0; $i -lt 10; $i++) {
+        $h = Get-Health 5
+        if ($h) { return $h }
+        Start-Sleep -Seconds 1
+    }
+    throw "/health did not answer for the memory reading"
 }
 
 # Polls /health every 50 ms; returns elapsed ms since $sw was started.
@@ -64,9 +83,16 @@ function Wait-Healthy($sw, [int]$timeoutSec = 300) {
     throw "Timed out waiting for $baseUrl/health"
 }
 
+# VirtualBox briefly refuses "showvminfo" while a VM changes state; retry instead of failing.
 function Get-VmState {
-    $line = & $vbox showvminfo $VmName --machinereadable | Select-String '^VMState='
-    return $line.ToString().Split('=', 2)[1].Trim('"')
+    for ($i = 0; $i -lt 20; $i++) {
+        $old = $ErrorActionPreference; $ErrorActionPreference = "Continue"
+        $line = & $vbox showvminfo $VmName --machinereadable 2>$null | Select-String '^VMState='
+        $ErrorActionPreference = $old
+        if ($line) { return $line.ToString().Split('=', 2)[1].Trim('"') }
+        Start-Sleep -Milliseconds 250
+    }
+    throw "Could not read the state of VM $VmName"
 }
 
 function Wait-VmState($state, [int]$timeoutSec = 180) {
@@ -87,7 +113,9 @@ function Get-PlatformMemoryMB {
         return $num
     } else {
         # Whole VM process on the host (guest OS + app + hypervisor process overhead).
-        $p = Get-Process -Name "VirtualBoxVM" -ErrorAction SilentlyContinue
+        # The process is "VBoxHeadless" for headless starts and "VirtualBoxVM" with a window.
+        $p = Get-Process -Name "VBoxHeadless", "VirtualBoxVM" -ErrorAction SilentlyContinue
+        if (-not $p) { throw "VirtualBox VM process not found for the memory reading" }
         return (($p | Measure-Object WorkingSet64 -Sum).Sum / 1MB)
     }
 }
@@ -108,8 +136,34 @@ function Start-Target {
         if ((Get-VmState) -ne "poweroff") { throw "VM must be powered off before a cold-boot run." }
         $sw = [Diagnostics.Stopwatch]::StartNew()
         & $vbox startvm $VmName --type headless | Out-Null
+        try { return (Wait-Healthy $sw 180) }
+        catch {
+            # VirtualBox NAT occasionally does not pass traffic after a heavy run; a fresh boot fixes it.
+            Write-Host "  VM API unreachable after boot (NAT hang); hard restart and measure again"
+            Record $run "start_retry" 1 "count"
+            Reset-Vm
+            $sw = [Diagnostics.Stopwatch]::StartNew()
+            & $vbox startvm $VmName --type headless | Out-Null
+            return (Wait-Healthy $sw 180)
+        }
     }
     return (Wait-Healthy $sw)
+}
+
+function Reset-Vm {
+    Quiet { & $vbox controlvm $VmName poweroff } | Out-Null   # prints progress to stderr
+    Wait-VmState "poweroff"
+    Start-Sleep -Seconds 3
+}
+
+# Boots the VM without measuring (used before the saved-state test), with one retry.
+function Start-VmHealthy {
+    for ($attempt = 1; $attempt -le 2; $attempt++) {
+        & $vbox startvm $VmName --type headless | Out-Null
+        try { Wait-Healthy ([Diagnostics.Stopwatch]::StartNew()) 180 | Out-Null; return }
+        catch { Write-Host "  VM API unreachable after boot (NAT hang); hard restart"; Reset-Vm }
+    }
+    throw "VM API did not come up after two boots"
 }
 
 function Stop-Target {
@@ -117,8 +171,16 @@ function Stop-Target {
     if ($Target -eq "docker") {
         docker stop $container | Out-Null
     } else {
-        & $vbox controlvm $VmName acpipowerbutton | Out-Null
+        # ACPI shutdown, like pressing the power button. If the guest ignores it, press it again;
+        # as a last resort switch the VM off hard and report the stop time as missing.
+        for ($attempt = 1; $attempt -le 3; $attempt++) {
+            Quiet { & $vbox controlvm $VmName acpipowerbutton } | Out-Null
+            try { Wait-VmState "poweroff" 60; return $sw.Elapsed.TotalMilliseconds } catch { Write-Host "  VM ignored shutdown request $attempt" }
+        }
+        Quiet { & $vbox controlvm $VmName poweroff } | Out-Null
         Wait-VmState "poweroff"
+        Write-Host "  VM was switched off hard; stop time not recorded"
+        return $null
     }
     return $sw.Elapsed.TotalMilliseconds
 }
@@ -135,23 +197,26 @@ if ($Target -eq "docker") {
 $k6 = Get-Command k6 -ErrorAction SilentlyContinue
 if (-not $SkipLoad -and -not $k6) { throw "k6 not found. Install it or use -SkipLoad." }
 
-Write-Host "== Disk footprint ($Target)"
-if ($Target -eq "docker") {
-    $bytes = [double](docker image inspect -f "{{.Size}}" $Image)
-} else {
-    $cfg = (& $vbox showvminfo $VmName --machinereadable | Select-String '^CfgFile=').ToString().Split('=', 2)[1].Trim('"')
-    $bytes = (Get-ChildItem (Split-Path $cfg) -Recurse -Include *.vdi | Measure-Object Length -Sum).Sum
+if ($FirstRun -eq 1 -and -not $ResumeOnly) {
+    Write-Host "== Disk footprint ($Target)"
+    if ($Target -eq "docker") {
+        $bytes = [double](docker image inspect -f "{{.Size}}" $Image)
+    } else {
+        $cfg = (& $vbox showvminfo $VmName --machinereadable | Select-String '^CfgFile=').ToString().Split('=', 2)[1].Trim('"')
+        $bytes = (Get-ChildItem (Split-Path $cfg) -Recurse -Include *.vdi | Measure-Object Length -Sum).Sum
+    }
+    Record 0 "disk_size" ($bytes / 1MB) "MB"
 }
-Record 0 "disk_size" ($bytes / 1MB) "MB"
 
 # ---------- repeated runs ----------
-for ($run = 1; $run -le $Runs; $run++) {
-    Write-Host "== $Target run $run of $Runs"
+for ($run = $FirstRun; $run -le $Runs; $run++) {
+    Write-Host "== $Target run $run of $Runs$(if ($ResumeOnly) { ' (resume only)' })"
 
+  if (-not $ResumeOnly) {
     Record $run "start_time" (Start-Target) "ms"
 
     Start-Sleep -Seconds 30   # let the system settle before reading idle memory
-    $h = Get-Health
+    $h = Get-HealthPatient
     Record $run "app_rss_idle" $h.rssMB "MB"
     Record $run "platform_mem_idle" (Get-PlatformMemoryMB) "MB"
     if ($Target -eq "docker") {
@@ -172,23 +237,24 @@ for ($run = 1; $run -le $Runs; $run++) {
         $half = [int]($secs / 2)
         Start-Sleep -Seconds ([Math]::Max($half, 5))
         Record $run "platform_mem_load" (Get-PlatformMemoryMB) "MB"
-        $h = Get-Health
+        $h = Get-Health 5   # under load: one try with a longer timeout, skip if it is too busy
         if ($h) { Record $run "app_rss_load" $h.rssMB "MB" }
         $proc.WaitForExit()
     }
 
-    Record $run "stop_time" (Stop-Target) "ms"
+    $stop = Stop-Target
+    if ($null -ne $stop) { Record $run "stop_time" $stop "ms" }
+  }
 
     if ($Target -eq "vm") {
         # Extra VM data point: resume from a saved state (closest VM equivalent to a "warm" start).
-        & $vbox startvm $VmName --type headless | Out-Null
-        Wait-Healthy ([Diagnostics.Stopwatch]::StartNew()) | Out-Null
+        Start-VmHealthy
         Start-Sleep -Seconds 10
         & $vbox controlvm $VmName savestate | Out-Null
         Wait-VmState "saved"
         $sw = [Diagnostics.Stopwatch]::StartNew()
         & $vbox startvm $VmName --type headless | Out-Null
-        Record $run "resume_time" (Wait-Healthy $sw) "ms"
+        Record $run "resume_time" (Wait-Healthy $sw 180) "ms"
         Stop-Target | Out-Null
     } else {
         # Warm start: start the existing (stopped) container again.

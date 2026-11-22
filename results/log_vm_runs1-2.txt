@@ -1,0 +1,156 @@
+== Disk footprint (vm)
+  disk_size                    6138 MB
+== vm run 1 of 3
+  start_time               75151.54 ms
+  app_rss_idle                 58.1 MB
+  platform_mem_idle         845.262 MB
+  platform_mem_load         863.109 MB
+  app_rss_load                 84.4 MB
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 75228   625.086527/s
+    checks_succeeded...: 100.00% 75228 out of 75228
+    checks_failed......: 0.00%   0 out of 75228
+
+    ✓ products_list ok
+    ✓ product_stock ok
+    ✓ inventory ok
+    ✓ create_order 201 or 409
+    ✓ forecast ok
+    ✓ route ok
+    ✓ replenishment ok
+
+    HTTP
+    http_req_duration..............: avg=79.78ms  min=3.88ms   med=74.6ms   max=1.74s p(90)=106.92ms p(95)=133.4ms  p(99)=180.9ms 
+      { expected_response:true }...: avg=79.78ms  min=3.88ms   med=74.6ms   max=1.74s p(90)=106.92ms p(95)=133.4ms  p(99)=180.9ms 
+    http_req_failed................: 0.00%  0 out of 75228
+    http_reqs......................: 75228  625.086527/s
+
+    EXECUTION
+    iteration_duration.............: avg=487.48ms min=292.54ms med=455.38ms max=2.59s p(90)=601.25ms p(95)=694.25ms p(99)=969.17ms
+    iterations.....................: 12329  102.444459/s
+    vus............................: 50     min=50         max=50
+    vus_max........................: 50     min=50         max=50
+
+    NETWORK
+    data_received..................: 100 MB 831 kB/s
+    data_sent......................: 10 MB  84 kB/s
+
+
+
+  stop_time               10860.625 ms
+powershell : 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+At line:1 char:302
++ ... tch {} } }; powershell -NoProfile -ExecutionPolicy Bypass -File scrip ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (0%...10%...20%....0%...90%...100%:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  resume_time             13774.985 ms
+  cooldown 60 s
+== vm run 2 of 3
+  start_time              71873.936 ms
+  app_rss_idle                 58.1 MB
+  platform_mem_idle         826.055 MB
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=furniture&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=packaging&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=textile&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=food&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine activel
+y refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=textile&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=electronics&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine 
+actively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=chemicals&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=food&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine activel
+y refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=electronics&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine 
+actively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=chemicals&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=chemicals&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=medical&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=food&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine activel
+y refused it."
+time="2026-11-22T22:59:26+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=electronics&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine 
+actively refused it."
+  platform_mem_load         841.172 MB
+  app_rss_load                 77.7 MB
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 28893  239.718501/s
+    checks_succeeded...: 99.93% 28875 out of 28893
+    checks_failed......: 0.06%  18 out of 28893
+
+    ✗ products_list ok
+      ↳  99% — ✓ 4722 / ✗ 18
+    ✓ product_stock ok
+    ✓ inventory ok
+    ✓ create_order 201 or 409
+    ✓ forecast ok
+    ✓ route ok
+    ✓ replenishment ok
+
+    HTTP
+    http_req_duration..............: avg=208.1ms  min=0s       med=224.53ms max=5.24s p(90)=298.46ms p(95)=312.6ms  p(99)=368.33ms
+      { expected_response:true }...: avg=208.23ms min=3.48ms   med=224.63ms max=5.24s p(90)=298.48ms p(95)=312.64ms p(99)=368.44ms
+    http_req_failed................: 0.06%  18 out of 28893
+    http_reqs......................: 28893  239.718501/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.26s    min=165.91ms med=1.39s    max=6.8s  p(90)=1.72s    p(95)=1.83s    p(99)=2.16s   
+    iterations.....................: 4740   39.326678/s
+    vus............................: 50     min=50          max=50
+    vus_max........................: 50     min=50          max=50
+
+    NETWORK
+    data_received..................: 38 MB  318 kB/s
+    data_sent......................: 3.9 MB 32 kB/s
+
+
+
+  stop_time                10817.72 ms
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+Timed out waiting for http://127.0.0.1:8081/health
+At <project>\scripts\measure.ps1:79 char:5
++     throw "Timed out waiting for $baseUrl/health"
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Timed out waiti...0.1:8081/health:String) [], RuntimeException
+    + FullyQualifiedErrorId : Timed out waiting for http://127.0.0.1:8081/health
+ 

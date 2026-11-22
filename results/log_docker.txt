@@ -1,0 +1,134 @@
+== Disk footprint (docker)
+  disk_size                 228.081 MB
+== docker run 1 of 3
+  start_time                880.033 ms
+  app_rss_idle                 60.6 MB
+  platform_mem_idle           13.47 MB
+  docker_backend_mem_idle   1108.324 MB
+  platform_mem_load           59.44 MB
+  app_rss_load                104.3 MB
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 255835  2130.135238/s
+    checks_succeeded...: 100.00% 255835 out of 255835
+    checks_failed......: 0.00%   0 out of 255835
+
+    ✓ products_list ok
+    ✓ product_stock ok
+    ✓ inventory ok
+    ✓ create_order 201 or 409
+    ✓ forecast ok
+    ✓ route ok
+    ✓ replenishment ok
+
+    HTTP
+    http_req_duration..............: avg=23.31ms  min=1.06ms  med=21.68ms  max=743.72ms p(90)=30.52ms  p(95)=40.5ms   p(99)=48.97ms 
+      { expected_response:true }...: avg=23.31ms  min=1.06ms  med=21.68ms  max=743.72ms p(90)=30.52ms  p(95)=40.5ms   p(99)=48.97ms 
+    http_req_failed................: 0.00%  0 out of 255835
+    http_reqs......................: 255835 2130.135238/s
+
+    EXECUTION
+    iteration_duration.............: avg=143.14ms min=46.48ms med=133.72ms max=1.04s    p(90)=182.28ms p(95)=219.41ms p(99)=271.86ms
+    iterations.....................: 41932  349.134523/s
+    vus............................: 50     min=50          max=50
+    vus_max........................: 50     min=50          max=50
+
+    NETWORK
+    data_received..................: 340 MB 2.8 MB/s
+    data_sent......................: 34 MB  287 kB/s
+
+
+
+  stop_time                 406.805 ms
+  resume_time               350.435 ms
+  cooldown 60 s
+== docker run 2 of 3
+  start_time                 410.53 ms
+  app_rss_idle                 60.8 MB
+  platform_mem_idle           11.89 MB
+  docker_backend_mem_idle   1352.637 MB
+  platform_mem_load           56.42 MB
+  app_rss_load                  103 MB
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 257247  2141.978186/s
+    checks_succeeded...: 100.00% 257247 out of 257247
+    checks_failed......: 0.00%   0 out of 257247
+
+    ✓ products_list ok
+    ✓ product_stock ok
+    ✓ inventory ok
+    ✓ create_order 201 or 409
+    ✓ forecast ok
+    ✓ route ok
+    ✓ replenishment ok
+
+    HTTP
+    http_req_duration..............: avg=23.18ms  min=1.03ms  med=21.46ms  max=734.16ms p(90)=31.94ms  p(95)=40.1ms   p(99)=48.97ms 
+      { expected_response:true }...: avg=23.18ms  min=1.03ms  med=21.46ms  max=734.16ms p(90)=31.94ms  p(95)=40.1ms   p(99)=48.97ms 
+    http_req_failed................: 0.00%  0 out of 257247
+    http_reqs......................: 257247 2141.978186/s
+
+    EXECUTION
+    iteration_duration.............: avg=142.36ms min=34.59ms med=129.82ms max=1.01s    p(90)=186.41ms p(95)=219.96ms p(99)=268.69ms
+    iterations.....................: 42161  351.055376/s
+    vus............................: 50     min=50          max=50
+    vus_max........................: 50     min=50          max=50
+
+    NETWORK
+    data_received..................: 342 MB 2.8 MB/s
+    data_sent......................: 35 MB  288 kB/s
+
+
+
+  stop_time                 426.569 ms
+  resume_time               302.816 ms
+  cooldown 60 s
+== docker run 3 of 3
+  start_time                365.021 ms
+  app_rss_idle                 61.1 MB
+  platform_mem_idle           11.95 MB
+  docker_backend_mem_idle   1409.324 MB
+  platform_mem_load           59.47 MB
+  app_rss_load                105.8 MB
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 270228  2249.968878/s
+    checks_succeeded...: 100.00% 270228 out of 270228
+    checks_failed......: 0.00%   0 out of 270228
+
+    ✓ products_list ok
+    ✓ product_stock ok
+    ✓ inventory ok
+    ✓ create_order 201 or 409
+    ✓ forecast ok
+    ✓ route ok
+    ✓ replenishment ok
+
+    HTTP
+    http_req_duration..............: avg=22.07ms min=1.06ms  med=20.6ms   max=610.15ms p(90)=29.01ms  p(95)=38.06ms  p(99)=46.91ms 
+      { expected_response:true }...: avg=22.07ms min=1.06ms  med=20.6ms   max=610.15ms p(90)=29.01ms  p(95)=38.06ms  p(99)=46.91ms 
+    http_req_failed................: 0.00%  0 out of 270228
+    http_reqs......................: 270228 2249.968878/s
+
+    EXECUTION
+    iteration_duration.............: avg=135.4ms min=31.41ms med=126.62ms max=847.39ms p(90)=171.95ms p(95)=207.91ms p(99)=256.47ms
+    iterations.....................: 44333  369.124851/s
+    vus............................: 50     min=50          max=50
+    vus_max........................: 50     min=50          max=50
+
+    NETWORK
+    data_received..................: 358 MB 3.0 MB/s
+    data_sent......................: 36 MB  303 kB/s
+
+
+
+  stop_time                 463.571 ms
+  resume_time               306.469 ms
+Done. Results appended to <project>\results\measurements.csv

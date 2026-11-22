@@ -1,0 +1,69 @@
+powershell : 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+At line:1 char:366
++ ... uns1-2.txt; powershell -NoProfile -ExecutionPolicy Bypass -File scrip ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (0%...10%...20%....0%...90%...100%:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+== vm run 3 of 3
+  start_time              65183.294 ms
+  app_rss_idle                   58 MB
+  platform_mem_idle         859.656 MB
+time="2026-11-22T23:12:56+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=furniture&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T23:12:56+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=medical&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T23:12:56+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=chemicals&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T23:12:56+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+  platform_mem_load         870.652 MB
+  app_rss_load                 79.6 MB
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 28742  238.017965/s
+    checks_succeeded...: 99.98% 28738 out of 28742
+    checks_failed......: 0.01%  4 out of 28742
+
+    ✗ products_list ok
+      ↳  99% — ✓ 4718 / ✗ 4
+    ✓ product_stock ok
+    ✓ inventory ok
+    ✓ create_order 201 or 409
+    ✓ forecast ok
+    ✓ route ok
+    ✓ replenishment ok
+
+    HTTP
+    http_req_duration..............: avg=209.32ms min=0s      med=229.2ms  max=5.76s p(90)=301.08ms p(95)=312.98ms p(99)=338.12ms
+      { expected_response:true }...: avg=209.35ms min=11.47ms med=229.23ms max=5.76s p(90)=301.09ms p(95)=312.99ms p(99)=338.13ms
+    http_req_failed................: 0.01%  4 out of 28742
+    http_reqs......................: 28742  238.017965/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.27s    min=174.9ms med=1.43s    max=6.95s p(90)=1.72s    p(95)=1.82s    p(99)=2.09s   
+    iterations.....................: 4722   39.103779/s
+    vus............................: 50     min=50         max=50
+    vus_max........................: 50     min=50         max=50
+
+    NETWORK
+    data_received..................: 38 MB  316 kB/s
+    data_sent......................: 3.9 MB 32 kB/s
+
+
+
+  stop_time                8874.547 ms
+  VM API unreachable after boot (NAT hang); hard restart
+VBoxManage.exe : 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+At <project>\scripts\measure.ps1:154 char:5
++     & $vbox controlvm $VmName poweroff 2>&1 | Out-Null
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (0%...10%...20%....0%...90%...100%:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

@@ -1,0 +1,10 @@
+== vm run 2 of 2 (resume only)
+powershell : 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+At line:1 char:538
++ ... t-Sleep 60; powershell -NoProfile -ExecutionPolicy Bypass -File scrip ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (0%...10%...20%....0%...90%...100%:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  resume_time             16615.641 ms
+Done. Results appended to <project>\results\measurements.csv

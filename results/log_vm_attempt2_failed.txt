@@ -1,0 +1,137 @@
+== Disk footprint (vm)
+  disk_size                    6137 MB
+== vm run 1 of 3
+  start_time              86057.775 ms
+  app_rss_idle                 58.2 MB
+  platform_mem_idle          840.18 MB
+powershell : time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api
+/products?category=medical&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target
+ machine actively refused it."
+At line:1 char:302
++ ... tch {} } }; powershell -NoProfile -ExecutionPolicy Bypass -File scrip ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (time="2026-11-2...ly refused it.":String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=electronics&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine 
+actively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=food&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine activel
+y refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=textile&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=chemicals&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=medical&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=chemicals&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=textile&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=electronics&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine 
+actively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=food&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine activel
+y refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=medical&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=chemicals&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=medical&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=packaging&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=furniture&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=packaging&page=2\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=furniture&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=chemicals&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=furniture&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=automotive&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine a
+ctively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=medical&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine acti
+vely refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=furniture&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=electronics&page=3\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine 
+actively refused it."
+time="2026-11-22T22:41:15+03:00" level=warning msg="Request Failed" error="Get \"http://127.0.0.1:8081/api/products?cat
+egory=furniture&page=1\": dial tcp 127.0.0.1:8081: connectex: No connection could be made because the target machine ac
+tively refused it."
+  platform_mem_load         859.723 MB
+  app_rss_load                 77.4 MB
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 23446  193.129237/s
+    checks_succeeded...: 99.88% 23419 out of 23446
+    checks_failed......: 0.11%  27 out of 23446
+
+    ✗ products_list ok
+      ↳  99% — ✓ 3811 / ✗ 27
+    ✓ product_stock ok
+    ✓ inventory ok
+    ✓ create_order 201 or 409
+    ✓ forecast ok
+    ✓ route ok
+    ✓ replenishment ok
+
+    HTTP
+    http_req_duration..............: avg=257.85ms min=0s       med=272.76ms max=6.71s p(90)=343.6ms  p(95)=369.84ms p(99)=495.61ms
+      { expected_response:true }...: avg=258.15ms min=7.09ms   med=272.86ms max=6.71s p(90)=343.63ms p(95)=369.9ms  p(99)=495.63ms
+    http_req_failed................: 0.11%  27 out of 23446
+    http_reqs......................: 23446  193.129237/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.57s    min=458.48ms med=1.67s    max=8.04s p(90)=2s       p(95)=2.13s    p(99)=4.28s   
+    iterations.....................: 3838   31.614348/s
+    vus............................: 32     min=32          max=50
+    vus_max........................: 50     min=50          max=50
+
+    NETWORK
+    data_received..................: 31 MB  256 kB/s
+    data_sent......................: 3.2 MB 26 kB/s
+
+
+
+VM did not reach state poweroff
+At <project>\scripts\measure.ps1:97 char:57
++ ... talSeconds -gt $timeoutSec) { throw "VM did not reach state $state" }
++                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (VM did not reach state poweroff:String) [], RuntimeException
+    + FullyQualifiedErrorId : VM did not reach state poweroff
+ 
