@@ -95,20 +95,17 @@ memory limits, and each measurement is repeated three times.
 \label{sec:design}
 
 \subsection{Architecture}
-% Kılavuz diyagramı SİZİN çizmenizi istiyor (draw.io). Önerilen içerik:
-% Sol: Windows 11 host -> Hyper-V / Windows Hypervisor Platform
-%   -> (a) VirtualBox -> Ubuntu 24.04 guest kernel -> systemd -> Node.js API :8080
-%          (NAT port forward host 127.0.0.1:8081 -> guest 8080)
-%   -> (b) WSL 2 VM (Docker Desktop) -> Linux kernel -> container (node:22-alpine) -> API :8080
-% Sağ: k6 yük üreticisi (host) -> HTTP istekleri her iki uca.
-% PNG olarak report/architecture.png kaydedin.
-\begin{figure}[htbp]
+% [TODO] Diyagramı 2-3 cümleyle kendi sözlerinizle anlatın ve Fig.~\ref{fig:architecture} diye atıf yapın
+% (ör. aynı API iki ortamda, ikisi de Hyper-V üzerinde, k6 iki porta yük gönderiyor).
+% Diyagram iki sütuna yayılan geniş şekil (figure*): tek sütunda yazılar okunmayacak kadar küçülüyordu.
+% Kaynak dosya: diagrams/architecture.drawio.png (draw.io ile açılıp düzenlenebilir).
+\begin{figure*}[t]
 	\centering
-	\IfFileExists{architecture.png}{\includegraphics[width=\columnwidth]{architecture.png}}
+	\IfFileExists{architecture.png}{\includegraphics[width=0.85\textwidth]{architecture.png}}
 	{\fbox{\parbox{0.9\columnwidth}{\centering\vspace{1.2cm}Draw the architecture diagram and save it as architecture.png\vspace{1.2cm}}}}
-	\caption{Test architecture. The same API runs in a VirtualBox virtual machine (left) and in a Docker container (right); k6 on the host sends the load.}
+	\caption{Test architecture. The same supply chain API runs in a Docker container inside Docker Desktop's WSL~2 virtual machine (left) and in an Ubuntu virtual machine on VirtualBox (right), both on top of Hyper-V. k6 on the same laptop sends the HTTP load to both; measure.ps1 starts, stops and times them.}
 	\label{fig:architecture}
-\end{figure}
+\end{figure*}
 
 \subsection{Application}
 The workload is a supply chain back end written for this study as a single Node.js file
