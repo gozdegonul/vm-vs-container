@@ -262,7 +262,8 @@ ephemeral storage. Fargate does not offer 2\,GB of memory with 2 vCPU, so both a
 priced at 4\,GB instead of the 2\,GB used in the experiment; the application needed less than
 110\,MB (Table~\ref{tab:results}). Data transfer out is taken as zero: at the average response
 size measured in the load tests (about 1.3\,KB), 10~million requests per month produce about
-13\,GB, which is inside the 100\,GB per month that AWS does not charge for. Table~\ref{tab:cost}
+13\,GB, which is inside the 100\,GB of data transfer to the internet per month that AWS
+provides free of charge across all services and regions~\cite{b10}. Table~\ref{tab:cost}
 shows the result for an instance running all month (730 hours) and for one running 12 hours a
 day (365 hours).
 % [TODO] Maliyet sonuçlarını kendi sözlerinizle yorumlayın: Fargate sürekli açıkken ~2,2 kat
@@ -369,6 +370,8 @@ responsibility for the accuracy, originality, reproducibility and integrity of t
 \bibitem{b8} Grafana Labs, ``Grafana k6 documentation,'' [Online]. Available: https://grafana.com/docs/k6/latest/. [Accessed: Day Month 2026].
 
 \bibitem{b9} Amazon Web Services, ``AWS Pricing Calculator: Amazon EC2 t3.medium and AWS Fargate, Europe (Frankfurt),'' [Online]. Available: \url{https://calculator.aws/\#/estimate?id=13cc304f30da2ccb0644f7ffe4d29740e200dc2f}. [Accessed: 23 November 2026].
+
+\bibitem{b10} Amazon Web Services, ``Amazon EC2 On-Demand Pricing: Data Transfer,'' [Online]. Available: \url{https://aws.amazon.com/ec2/pricing/on-demand/}. [Accessed: 23 November 2026].
 
 \end{thebibliography}
 
